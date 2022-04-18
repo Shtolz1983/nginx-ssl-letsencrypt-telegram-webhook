@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  bot1:
+    build: .
+    networks:
+      - nginx_app-network
+    container_name: bot1
+    restart: unless-stopped
+#    env_file: env.
+
+
+networks:
+  nginx_app-network:
+    external: true

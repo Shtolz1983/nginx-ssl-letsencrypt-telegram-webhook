@@ -1,0 +1,48 @@
+version: '3'
+
+services:
+  nginx:
+    build: .
+    container_name: nginx_ssl
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - web-root:/var/www/html
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+    networks:
+      - app-network
+
+    # Перезапустит nginx контейнер каждые 6 часов и подгрузит новые сертификаты, если есть
+    command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    networks:
+      - app-network
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - web-root:/var/www/html
+    depends_on:
+      - nginx
+    # --force-renewal
+    command: certonly --webroot --webroot-path=/var/www/html --email denmifi@mail.ru --agree-tos --no-eff-email -d DOMAIN  -d www.DOMAIN
+
+    # Проверяет каждые 12 часов, нужны ли новые сертификаты
+    entrypoint:  "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+
+
+
+
+volumes:
+  certbot-etc:
+  certbot-var:
+  web-root:
+
+networks:
+  app-network:
+    driver: bridge

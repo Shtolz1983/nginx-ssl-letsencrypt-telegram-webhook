@@ -1,0 +1,16 @@
+1) create new file bot{number of bot}.locations
+example:
+location /{bot_token} {
+        resolver 127.0.0.11;
+        proxy_redirect off;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Host $server_name;
+        set $project http://bot{number of bot}:{port};
+        proxy_pass $project;
+	}
+2) put file to directory bot_locations
+3) come to dir bot_locations
+4) run following command in the shell (linux): docker cp bot{number of bot}.locations nginx_ssl:/etc/nginx/conf.d
+5) run following command in the shell (linux): docker exec -it nginx_ssl  nginx -s reload

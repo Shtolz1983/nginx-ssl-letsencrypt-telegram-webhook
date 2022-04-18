@@ -1,0 +1,5 @@
+1) run the following command in the shell (linux): docker stop bot{number of bot}
+2) run the following command in the shell (linux): docker rm bot{number of bot}
+3) run following command in the shell (linux):
+    docker exec -it nginx_ssl rm /etc/nginx/conf.d/bot{number of bot}.locations $$ nginx -s reload
+4) del file bot{number of bot}.locations in the  directory bot_locations
