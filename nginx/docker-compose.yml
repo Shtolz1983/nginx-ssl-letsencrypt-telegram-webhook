@@ -30,7 +30,7 @@ services:
     depends_on:
       - nginx
     # --force-renewal
-    command: certonly --webroot --webroot-path=/var/www/html --email denmifi@mail.ru --agree-tos --no-eff-email -d DOMAIN  -d www.DOMAIN
+    command: certonly --webroot --webroot-path=/var/www/html --email den@mail.ru --agree-tos --no-eff-email -d DOMAIN  -d www.DOMAIN
 
     # Проверяет каждые 12 часов, нужны ли новые сертификаты
     entrypoint:  "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
